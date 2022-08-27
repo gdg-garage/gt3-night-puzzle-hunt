@@ -1,0 +1,1 @@
+Data source: https://extensions.libreoffice.org/en/extensions/show/czech-dictionaries

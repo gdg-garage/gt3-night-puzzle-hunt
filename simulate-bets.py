@@ -146,7 +146,9 @@ def main():
                 # if i == 3:
                 #     # b = informed_bet(i, teams_cnt, average_bet, bet_sigma, real_times, estimates)
                 #     # b = believer_bet(i, teams_cnt, average_bet, bet_sigma, estimates, average_time)
-                #     b = nonbeliever_bet(i, teams_cnt, average_bet, bet_sigma, estimates, average_time)
+                #     # b = nonbeliever_bet(i, teams_cnt, average_bet, bet_sigma, estimates, average_time)
+                #     # b = None  # play it safe
+                #     b = random_bet(i, teams_cnt, average_bet * 2, bet_sigma)  # big better
                 # else:
                 #     b = random_bet(i, teams_cnt, average_bet, bet_sigma)
                 b = random_bet(i, teams_cnt, average_bet, bet_sigma)

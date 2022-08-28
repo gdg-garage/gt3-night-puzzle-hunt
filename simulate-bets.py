@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas
 
 BET_COEF = [(1, 1.0625), (2, 1.125), (4, 1.25), (8, 1.5), (16, 2.0), (32, 3.0)]
-ESTIMATE_COEF = [(1, 3.0), (2, 2.0), (4, 1.0), (8, -0.0), (16, -0.5), (32, -1.0), (64, -1.0)]
+ESTIMATE_COEF = [(1, 3.0), (2, 2.0), (4, 1.0), (8, -0.0), (16, -0.5), (32, -1.0), (64, -2.0)]
 
 
 def coefficient(diff, coef):

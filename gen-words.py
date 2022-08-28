@@ -4,7 +4,7 @@ import re
 
 from lib import load_words, out_file
 
-limit = 60
+limit = 3 * 42
 
 
 def words():

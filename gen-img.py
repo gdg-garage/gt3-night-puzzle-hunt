@@ -12,7 +12,7 @@ def main():
     width, height = map_img.size
     words = sorted(load_words())
 
-    font = ImageFont.truetype("/home/tivvit/.local/share/fonts/Roboto Mono for Powerline.ttf", 18)
+    font = ImageFont.truetype("RobotoMono-Medium.ttf", 18)
 
     # measure text size
     img = Image.new("RGBA", (width, height))
@@ -22,7 +22,7 @@ def main():
     distance = 32
     text_side_bumper = 6
     safe_zone_left = text_width + 3 * text_side_bumper  # 1x for each side and once for line coming out of the image
-    safe_zone_up = text_width + 3 * text_side_bumper  # 1x for each side and once for line coming out of the image
+    safe_zone_up = text_width + 13 * text_side_bumper  # 1x for each side and once for line coming out of the image
     map_with_white = Image.new("RGBA", (width + safe_zone_left, height + safe_zone_up), (255, 255, 255, 255))
     map_with_white.paste(map_img, (safe_zone_left, safe_zone_up))
 

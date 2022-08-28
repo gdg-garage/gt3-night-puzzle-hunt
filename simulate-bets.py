@@ -12,7 +12,7 @@ def coef(diff, coef):
     for max_diff, c in coef:
         if max_diff >= diff:
             return c
-    return coef[-1][1]
+    return 0
 
 
 def eval_bet(real_times, estimates, team, bet, bet_type):
@@ -23,8 +23,8 @@ def eval_bet(real_times, estimates, team, bet, bet_type):
         return 0
     diff = abs(diff)
     # on point
-    if bet_type == 0:
-        return bet * (coef(diff, BET_COEF_ON_TIME))
+    # if bet_type == 0:
+    #     return bet * (coef(diff, BET_COEF_ON_TIME))
     # worse
     if bet_type == -1:
         return bet * (coef(diff, BET_COEF))
@@ -35,6 +35,10 @@ def eval_bet(real_times, estimates, team, bet, bet_type):
     return 0
 
 
+def bet_type_to_str(bet_type):
+    return "be better" if bet_type == -1 else "be worse"
+
+
 def random_bet(current_team, teams_cnt, average_bet, bet_sigma):
     team = random.randint(0, teams_cnt - 1)
     if team == current_team:
@@ -42,8 +46,17 @@ def random_bet(current_team, teams_cnt, average_bet, bet_sigma):
     bet = round(random.gauss(average_bet, bet_sigma))
     if bet <= 0:
         return
-    bet_type = random.choice([-1, 0, 1])
+    bet_type = random.choice([-1, 1])
     return team, bet, bet_type
+
+def beliver_bet(current_team, teams_cnt, average_bet, bet_sigma):
+    team = random.randint(0, teams_cnt - 1)
+    if team == current_team:
+        return
+    bet = round(random.gauss(average_bet, bet_sigma))
+    if bet <= 0:
+        return
+    return team, bet, 1
 
 
 def informed_bet(current_team, teams_cnt, average_bet, bet_sigma, real_times, estimates):
@@ -88,7 +101,7 @@ def main():
     bets_cnt_sigma = 3
     average_bet = 2000
     bet_sigma = 1000
-    simulations = 100
+    simulations = 420
 
     time_step = (max_time - min_time) / teams_cnt
     # equidistant distribution
@@ -127,30 +140,30 @@ def main():
         # generate bets
         for i in range(teams_cnt):
             for _ in range(min_cnt_bets + round(random.gauss(average_cnt_bets, bets_cnt_sigma))):
-                # if i == 3:
-                #     b = informed_bet(i, teams_cnt, average_bet, bet_sigma, real_times, estimates)
-                if i == 4:
-                    b = safe_bet(i, teams_cnt, average_bet * 2, bet_sigma)
+                if i == 3:
+                    # b = informed_bet(i, teams_cnt, average_bet, bet_sigma, real_times, estimates)
+                    b = beliver_bet(i, teams_cnt, average_bet, bet_sigma)
+                    # b = safe_bet(i, teams_cnt, average_bet, bet_sigma)
                 else:
                     b = random_bet(i, teams_cnt, average_bet, bet_sigma)
+                b = random_bet(i, teams_cnt, average_bet, bet_sigma)
                 if b:
                     team, bet, bet_type = b
                     bets.append((i, team, bet, bet_type))
 
-        for i in range(1000):
-            b = safe_bet(4, teams_cnt, average_bet * 2, bet_sigma)
-            if b:
-                team, bet, bet_type = b
-                bets.append((4, team, bet, bet_type))
-
         # eval bets
         for b in bets:
             team, team_bet, bet, bet_type = b
-            if teams_money[team] < bet:
-                print(f"team {team} does not have enough money to bet {bet} that {team_bet} will {bet_type}")
+            if team == team_bet:
+                print("it is illegal to bet on yourself")
                 continue
+            if teams_money[team] < bet:
+                print(
+                    f"team {team} does not have enough money to bet {bet} that {team_bet} will {bet_type_to_str(bet_type)}")
+                continue
+            teams_money[team] -= bet
             won = eval_bet(real_times, estimates, team_bet, bet, bet_type)
-            print(f"team {team} bet {bet} that {team_bet} will {bet_type} and won {won}")
+            print(f"team {team} bet {bet} that {team_bet} will {bet_type_to_str(bet_type)} and won {won}")
             teams_money[team] += won
 
         wins.append(teams_money.index(max(teams_money)))

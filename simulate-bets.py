@@ -3,9 +3,8 @@ import random
 import matplotlib.pyplot as plt
 import pandas
 
-BET_COEF = [(1, 0.0625), (2, 0.125), (4, 0.25), (8, 0.5), (16, 1.0), (32, 2.0)]
-BET_COEF_ON_TIME = [(1, 1.0), (2, 1.0), (4, 0.5), (8, 0.25), (16, 0.125), (32, 0.0625)]
-ON_TIME_COEF = 0.5
+BET_COEF = [(1, 1.0625), (2, 1.125), (4, 1.25), (8, 1.5), (16, 2.0), (32, 3.0)]
+BET_COEF_ON_TIME = [(1, 1.5), (2, 1.25), (4, 0.5), (8, 0.25), (16, 0.125), (32, 0.0625)]
 ESTIMATE_COEF = [(1, 3.0), (2, 2.0), (4, 1.0), (8, -0.0), (16, -0.5), (32, -1.0)]
 
 
@@ -25,13 +24,13 @@ def eval_bet(real_times, estimates, team, bet, bet_type):
     diff = abs(diff)
     # on point
     if bet_type == 0:
-        return bet * (1 + (coef(diff, BET_COEF_ON_TIME) * ON_TIME_COEF))
+        return bet * (coef(diff, BET_COEF_ON_TIME))
     # worse
     if bet_type == -1:
-        return bet * (1 + coef(diff, BET_COEF))
+        return bet * (coef(diff, BET_COEF))
     # better
     if bet_type == 1:
-        return bet * (1 + coef(diff, BET_COEF))
+        return bet * (coef(diff, BET_COEF))
     print("invalid bet")
     return 0
 

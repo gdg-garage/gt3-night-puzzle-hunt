@@ -1,9 +1,9 @@
 import json
-import os.path
 import random
 import re
 
-out_file = "words.json"
+from lib import load_words, out_file
+
 limit = 60
 
 
@@ -16,12 +16,6 @@ def words():
 def is_word_good(w: str):
     # upper means names and surnames (we do not need that)
     return re.match(r"^(?![xw])[a-z]{5}$", w)
-
-
-def load_words():
-    if not os.path.exists(out_file):
-        return []
-    return json.load(open(out_file))
 
 
 def main():

@@ -8,7 +8,7 @@ BET_COEF_ON_TIME = [(1, 1.5), (2, 1.25), (4, 0.5), (8, 0.25), (16, 0.125), (32, 
 ESTIMATE_COEF = [(1, 3.0), (2, 2.0), (4, 1.0), (8, -0.0), (16, -0.5), (32, -1.0)]
 
 
-def coef(diff, coef):
+def coefficient(diff, coef):
     for max_diff, c in coef:
         if max_diff >= diff:
             return c
@@ -27,10 +27,10 @@ def eval_bet(real_times, estimates, team, bet, bet_type):
     #     return bet * (coef(diff, BET_COEF_ON_TIME))
     # worse
     if bet_type == -1:
-        return bet * (coef(diff, BET_COEF))
+        return bet * (coefficient(diff, BET_COEF))
     # better
     if bet_type == 1:
-        return bet * (coef(diff, BET_COEF))
+        return bet * (coefficient(diff, BET_COEF))
     print("invalid bet")
     return 0
 
@@ -49,14 +49,31 @@ def random_bet(current_team, teams_cnt, average_bet, bet_sigma):
     bet_type = random.choice([-1, 1])
     return team, bet, bet_type
 
-def beliver_bet(current_team, teams_cnt, average_bet, bet_sigma):
+
+def believer_bet(current_team, teams_cnt, average_bet, bet_sigma, estimates, average_time):
+    # teams who estimate worse than average are bet to be better
     team = random.randint(0, teams_cnt - 1)
     if team == current_team:
         return
     bet = round(random.gauss(average_bet, bet_sigma))
+    if estimates[team] < average_time:
+        return
     if bet <= 0:
         return
     return team, bet, 1
+
+
+def nonbeliever_bet(current_team, teams_cnt, average_bet, bet_sigma, estimates, average_time):
+    # teams who estimate better than average are bet to be worse
+    team = random.randint(0, teams_cnt - 1)
+    if team == current_team:
+        return
+    bet = round(random.gauss(average_bet, bet_sigma))
+    if estimates[team] > average_time:
+        return
+    if bet <= 0:
+        return
+    return team, bet, -1
 
 
 def informed_bet(current_team, teams_cnt, average_bet, bet_sigma, real_times, estimates):
@@ -131,7 +148,7 @@ def main():
         print(f"money: {teams_money}")
         for i in range(teams_cnt):
             diff = abs(real_times[i] - estimates[i])
-            c = coef(diff, ESTIMATE_COEF)
+            c = coefficient(diff, ESTIMATE_COEF)
             reward = guess_reward * initial_bet_multiplier * c
             print(f"team {i} diff {diff} coef {c} reward {reward}")
             teams_money[i] += reward
@@ -140,12 +157,13 @@ def main():
         # generate bets
         for i in range(teams_cnt):
             for _ in range(min_cnt_bets + round(random.gauss(average_cnt_bets, bets_cnt_sigma))):
-                if i == 3:
-                    # b = informed_bet(i, teams_cnt, average_bet, bet_sigma, real_times, estimates)
-                    b = beliver_bet(i, teams_cnt, average_bet, bet_sigma)
-                    # b = safe_bet(i, teams_cnt, average_bet, bet_sigma)
-                else:
-                    b = random_bet(i, teams_cnt, average_bet, bet_sigma)
+                # if i == 3:
+                #     # b = informed_bet(i, teams_cnt, average_bet, bet_sigma, real_times, estimates)
+                #     # b = believer_bet(i, teams_cnt, average_bet, bet_sigma, estimates, average_time)
+                #     b = nonbeliever_bet(i, teams_cnt, average_bet, bet_sigma, estimates, average_time)
+                #     # b = safe_bet(i, teams_cnt, average_bet, bet_sigma)
+                # else:
+                #     b = random_bet(i, teams_cnt, average_bet, bet_sigma)
                 b = random_bet(i, teams_cnt, average_bet, bet_sigma)
                 if b:
                     team, bet, bet_type = b

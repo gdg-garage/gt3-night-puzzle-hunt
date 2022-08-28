@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import pandas
 
 BET_COEF = [(1, 1.0625), (2, 1.125), (4, 1.25), (8, 1.5), (16, 2.0), (32, 3.0)]
-BET_COEF_ON_TIME = [(1, 1.5), (2, 1.25), (4, 0.5), (8, 0.25), (16, 0.125), (32, 0.0625)]
 ESTIMATE_COEF = [(1, 3.0), (2, 2.0), (4, 1.0), (8, -0.0), (16, -0.5), (32, -1.0)]
 
 
@@ -22,9 +21,6 @@ def eval_bet(real_times, estimates, team, bet, bet_type):
     if bet_type == 1 and diff > 0:
         return 0
     diff = abs(diff)
-    # on point
-    # if bet_type == 0:
-    #     return bet * (coef(diff, BET_COEF_ON_TIME))
     # worse
     if bet_type == -1:
         return bet * (coefficient(diff, BET_COEF))
@@ -90,16 +86,6 @@ def informed_bet(current_team, teams_cnt, average_bet, bet_sigma, real_times, es
     return
 
 
-def safe_bet(current_team, teams_cnt, average_bet, bet_sigma):
-    team = random.randint(0, teams_cnt - 1)
-    if team == current_team:
-        return
-    bet = round(random.gauss(average_bet, bet_sigma))
-    if bet <= 0:
-        return
-    return team, bet, 0
-
-
 def main():
     init_shitcoins = 10000
     teams_cnt = 8
@@ -161,7 +147,6 @@ def main():
                 #     # b = informed_bet(i, teams_cnt, average_bet, bet_sigma, real_times, estimates)
                 #     # b = believer_bet(i, teams_cnt, average_bet, bet_sigma, estimates, average_time)
                 #     b = nonbeliever_bet(i, teams_cnt, average_bet, bet_sigma, estimates, average_time)
-                #     # b = safe_bet(i, teams_cnt, average_bet, bet_sigma)
                 # else:
                 #     b = random_bet(i, teams_cnt, average_bet, bet_sigma)
                 b = random_bet(i, teams_cnt, average_bet, bet_sigma)

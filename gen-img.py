@@ -12,31 +12,36 @@ def main():
     width, height = map_img.size
     words = load_words()
 
-    safe_zone = 60
+    font = ImageFont.truetype("/home/tivvit/.local/share/fonts/Roboto Mono for Powerline.ttf", 14)
+
+    # measure text size
+    img = Image.new("RGBA", (width, height))
+    draw = ImageDraw.Draw(img)
+    text_width, text_height = draw.textsize(words[0], font=font)
+
+    distance = 32
+    text_side_bumper = 6
+    safe_zone = text_height + 3 * text_side_bumper # 1x for each side and once for line coming out of the image
     map_with_white = Image.new("RGBA", (width + safe_zone, height + safe_zone), (255, 255, 255, 255))
     map_with_white.paste(map_img, (safe_zone, safe_zone))
 
     width += safe_zone
     height += safe_zone
 
-    # font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 12)
-    font = ImageFont.truetype("/home/tivvit/.local/share/fonts/Roboto Mono for Powerline.ttf", 14)
-
-    distance = 32
     y_start = safe_zone + distance / 2
     word_pos = 0
 
-    img = Image.new("RGBA", (width, height))
-    draw = ImageDraw.Draw(img)
-    text_width, text_height = draw.textsize(words[0], font=font)
-    line_offset = text_height / 2
+    # img = Image.new("RGBA", (width, height))
+    # draw = ImageDraw.Draw(img)
+    # text_width, text_height = draw.textsize(words[0], font=font)
+    text_middle = text_height / 2
 
     for i in range(round((height - y_start) / distance)):
         text = words[word_pos].upper()
 
-        draw.text((4, y_start + i * distance), text, (0, 0, 0), font=font)
+        draw.text((text_side_bumper, y_start + i * distance), text, (0, 0, 0), font=font)
         draw.line(
-            ((text_width + 8, line_offset + y_start + i * distance), (width, line_offset + y_start + i * distance)),
+            ((text_width + 2 * text_side_bumper, text_middle + y_start + i * distance), (width, text_middle + y_start + i * distance)),
             fill=(0, 0, 0, round(.40 * 255)), width=1)
         word_pos += 1
 

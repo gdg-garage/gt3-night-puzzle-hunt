@@ -1,4 +1,5 @@
-# Garage Trip 3.0 Night Shitcoin puzzle hunt
+# Garage Trip 3.0
+# Night Shitcoin puzzle hunt
 
 * [Presentation](https://docs.google.com/presentation/d/1vvnri2OIJ2dPrTBQ36SoBPvN90gxa7DKYuv2edNywu0/edit?usp=sharing)
 * [Map](https://github.com/tivvit/gt3-night-puzzle-hunt/blob/main/final.png)
